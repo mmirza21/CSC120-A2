@@ -5,31 +5,31 @@ itemID = 0
 A class to represent the resale shop that buys used computers and resells them.
 """
 class ResaleShop:
-    def __init__(self, itemID: int, computer: Dict[str, Union[str,int,bool]]) -> None:
+    def __init__(self, inventory : Dict[int,Dict[str, Union[str,int,bool]]] ) -> None:
         """ 
         inventory: a dictionary where we'll store our inventory
         The key is an int representing the item number
         The value is another dictionary containing information about the machine
         """
-        self.inventory: Dict[itemID, computer]
+        self.inventory = inventory
 
     """
     Takes in a Dict containing all the information about a computer,
     adds it to the inventory, returns the assigned item_id
     """
-    def buy(inventory: dict, computer: Dict[str, Union[str, int, bool]]) -> list:
+    def buy(self,computer: Dict[str, Union[str,int,bool]] ) -> list:
         global itemID
         itemID += 1 # increment itemID
-        inventory[itemID] = computer
+        self.inventory[itemID] = computer
         return itemID
 
     """
     Takes in an item_id, removes the associated computer if it is the inventory, 
     prints error message otherwise
     """
-    def sell(inventory:dict, item_id: int):
-        if item_id in inventory:
-            del inventory[item_id]
+    def sell(self, item_id: int):
+        if item_id in self.inventory:
+            del self.inventory[item_id]
             print("Item", item_id, "sold!")
         else: 
             print("Item", item_id, "not found. Please select another item to sell.")
@@ -37,22 +37,22 @@ class ResaleShop:
     """
     prints all the items in the inventory (if it isn't empty), prints error otherwise
     """
-    def print_inventory(inventory:dict):
+    def print_inventory(self):
         # If the inventory is not empty
-        if inventory:
+        if self.inventory:
             # For each item
-            for item_id in inventory:
+            for item_id in self.inventory:
                 # Print its details
-                print(f'Item ID: {item_id} : {inventory[item_id]}')
+                print(f'Item ID: {item_id} : {self.inventory[item_id]}')
         else:
             print("No inventory to display.")
     """
     Takes in a item_id, checks the year it was made and depending 
     on that year it updates the price.
     """
-    def refurbish(inventory: dict, item_id: int, new_os: Optional[str] = None):
-        if item_id in inventory:
-            computer = inventory[item_id] # locate the computer
+    def refurbish(self, item_id: int, new_os: Optional[str] = None):
+        if item_id in self.inventory:
+            computer = self.inventory[item_id] # locate the computer
             if int(computer["year_made"]) < 2000:
                 computer["price"] = 0 # too old to sell, donation only
             elif int(computer["year_made"]) < 2012:
@@ -70,8 +70,8 @@ class ResaleShop:
     Takes in an item_id and a new price, updates the price of the associated
     computer if it is the inventory, prints error message otherwise
     """
-    def update_price(inventory:dict,item_id: int, new_price: int):
-        if item_id in inventory:
-            inventory[item_id]["price"] = new_price
+    def update_price(self, item_id: int, new_price: int):
+        if item_id in self.inventory:
+            self.inventory[item_id]["price"] = new_price
         else:
             print("Item", item_id, "not found. Cannot update price.")
